@@ -54,8 +54,11 @@
 }
 
 .carousel.is-native .carousel__track {
-  padding-inline: var(--vc-edge);
   transform: none;
+}
+
+.carousel.is-native .carousel__slide {
+  order: var(--vc-native-order, 0);
 }
 
 .carousel.is-native:not(.is-vertical) .carousel__viewport {
@@ -70,6 +73,11 @@
   overscroll-behavior-y: contain;
   scroll-snap-type: y mandatory;
   scroll-padding-block: var(--vc-edge);
+}
+
+.carousel.is-native.is-disabled .carousel__viewport,
+.carousel.is-native.is-locked .carousel__viewport {
+  overflow: hidden;
 }
 
 .carousel.is-native .carousel__viewport {

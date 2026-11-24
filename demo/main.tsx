@@ -17,6 +17,9 @@ const modes = {
   loop: { wrapAround: true },
   finite: {},
   native: { nativeCss: true },
+  'native-loop': { nativeCss: true, wrapAround: true },
+  'native-rtl': { nativeCss: true, wrapAround: true, dir: 'rtl' },
+  'native-vertical': { nativeCss: true, wrapAround: true, dir: 'ttb', height: 310 },
   fade: { wrapAround: true, slideEffect: 'fade' },
   vertical: { dir: 'ttb', height: 310 },
   rtl: { dir: 'rtl' },
@@ -25,7 +28,7 @@ const modes = {
 type Mode = keyof typeof modes
 
 function Demo() {
-  const [mode, setMode] = useState<Mode>('loop')
+  const [mode, setMode] = useState<Mode>('native-loop')
   const [active, setActive] = useState(0)
   const [autoplay, setAutoplay] = useState(false)
   const [adaptive, setAdaptive] = useState(false)
@@ -55,6 +58,7 @@ function Demo() {
         pauseAutoplayOnHover
         adaptiveHeight={adaptive}
         gap={12}
+        itemsToShow={viewport === 'auto' ? 'auto' : 1}
         mouseWheel={{ ignoreCrossAxis: true }}
         breakpoints={viewport === 'responsive' ? { 640: { itemsToShow: 2.5 } } : undefined}
         {...modes[mode]}
@@ -68,6 +72,7 @@ function Demo() {
           <Slide key={study.title}>
             <div className={'study study-' + index} style={{
               '--ink': study.ink, '--sky': study.sky, '--base': study.base,
+              width: viewport === 'auto' ? 'min(' + (220 + index * 40) + 'px, 70vw)' : undefined,
             } as React.CSSProperties}>
               <h2>{study.title}</h2>
               <p>{study.figure}</p>
@@ -81,16 +86,19 @@ function Demo() {
           <option value="loop">Loop</option>
           <option value="finite">Finite</option>
           <option value="native">Native scroll</option>
+          <option value="native-loop">Native loop</option>
+          <option value="native-rtl">Native loop · RTL</option>
+          <option value="native-vertical">Native loop · Vertical</option>
           <option value="fade">Fade</option>
           <option value="vertical">Vertical</option>
           <option value="rtl">Right to left</option>
           <option value="marquee">Marquee</option>
         </select></label>
         <label>Slides<select value={count} onChange={(event) => setCount(Number(event.target.value))}>
-          <option value="5">Five</option><option value="3">Three</option><option value="1">One</option>
+          <option value="5">Five</option><option value="3">Three</option><option value="2">Two</option><option value="1">One</option>
         </select></label>
         <label>Layout<select value={viewport} onChange={(event) => setViewport(event.target.value)}>
-          <option value="single">Single</option><option value="responsive">Responsive</option>
+          <option value="single">Single</option><option value="responsive">Responsive</option><option value="auto">Variable width</option>
         </select></label>
         <label className="checkbox"><input type="checkbox" checked={autoplay}
           onChange={(event) => setAutoplay(event.target.checked)} />Autoplay</label>

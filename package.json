@@ -9,13 +9,26 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
-      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
-    "./carousel.css": { "types": "./dist/carousel.css.d.ts", "default": "./dist/carousel.css" }
+    "./carousel.css": {
+      "types": "./dist/carousel.css.d.ts",
+      "default": "./dist/carousel.css"
+    }
   },
-  "files": ["dist"],
-  "sideEffects": ["**/*.css"],
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode library && tsc -p tsconfig.json --emitDeclarationOnly --outDir dist && cp dist/index.d.ts dist/index.d.cts && cp src/carousel.css.d.ts dist/carousel.css.d.ts",
@@ -27,7 +40,7 @@
     "react": "^19.0.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.0",
+    "@playwright/test": "1.61.1",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "react": "^19.1.0",

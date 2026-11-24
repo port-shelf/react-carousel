@@ -12,6 +12,10 @@ export const defaultLabels = {
   ariaNavigateToSlide: 'Navigate to slide {slideNumber}',
   ariaPreviousSlide: 'Navigate to previous slide',
   ariaNextSlide: 'Navigate to next slide',
+  iconArrowDown: 'Arrow pointing downwards',
+  iconArrowLeft: 'Arrow pointing to the left',
+  iconArrowRight: 'Arrow pointing to the right',
+  iconArrowUp: 'Arrow pointing upwards',
   itemXofY: 'Item {currentSlide} of {slidesCount}',
 } as const
 
@@ -29,6 +33,7 @@ export interface CarouselOptions {
   gap?: number
   height?: number | string
   i18n?: CarouselLabels
+  ignoreAnimations?: boolean | string | string[]
   itemsToShow?: number | 'auto'
   itemsToScroll?: number
   keyboardNavigation?: boolean
@@ -36,6 +41,7 @@ export interface CarouselOptions {
   marqueeSpeed?: number
   mouseDrag?: boolean | DragOptions
   mouseWheel?: boolean | WheelOptions
+  mouseScrollThreshold?: number
   nativeCss?: boolean
   pauseAutoplayOnHover?: boolean
   preventExcessiveDragging?: boolean
@@ -62,6 +68,7 @@ export const defaultOptions = {
   gap: 0,
   height: 'auto',
   i18n: {},
+  ignoreAnimations: false,
   itemsToShow: 1,
   itemsToScroll: 1,
   keyboardNavigation: true,
@@ -69,6 +76,7 @@ export const defaultOptions = {
   marqueeSpeed: 60,
   mouseDrag: true,
   mouseWheel: false,
+  mouseScrollThreshold: 10,
   nativeCss: false,
   pauseAutoplayOnHover: false,
   preventExcessiveDragging: false,
@@ -93,6 +101,20 @@ export function resolveOptions(options: CarouselOptions, breakpoints: Breakpoint
   const defined = Object.fromEntries(Object.entries({ ...options, ...overrides }).filter(([, value]) => value !== undefined))
   return { ...defaultOptions, ...defined, i18n: { ...defaultLabels, ...options.i18n, ...overrides?.i18n } } as
     Required<CarouselOptions> & { i18n: Required<CarouselLabels> }
+}
+
+export type ResolvedOptions = Omit<Required<CarouselOptions>, 'i18n'> & {
+  i18n: Required<CarouselLabels>
+  breakpointMode: BreakpointMode
+  breakpoints?: Breakpoints
+  classPrefix: string
+  modelValue: number
+}
+
+export function alignmentOffset(alignment: SnapAlign, shown: number) {
+  if (alignment === 'start') return 0
+  if (alignment === 'end') return shown - 1
+  return (shown - (alignment === 'center-even' ? 2 : 1)) / 2
 }
 
 export function formatLabel(message: string, values: Record<string, string | number>) {
@@ -143,7 +165,9 @@ export function buildLayout({
     let align = available / 2
     if (alignment === 'start') align = edge
     if (alignment === 'end') align = available - edge
-    if (alignment === 'center-even' && visible !== 'auto') align = step * ((visible - 2) / 2)
+    if (alignment === 'center-even') {
+      align = visible === 'auto' ? viewport / 2 - size(index) : step * alignmentOffset(alignment, visible)
+    }
     const desired = start(index) - align
     if (loop) return desired
     if (desired <= edge) return 0
@@ -156,10 +180,7 @@ export function buildLayout({
 
 export function getStepTarget(index: number, direction: number, step: number, count: number, visible: number | 'auto', alignment: SnapAlign, loop: boolean) {
   if (loop || visible === 'auto' || step === 1 || count === 0) return index + direction * step
-  const align = alignment === 'start' ? 0
-    : alignment === 'end' ? visible - 1
-    : alignment === 'center-even' ? (visible - 2) / 2
-    : (visible - 1) / 2
+  const align = alignmentOffset(alignment, visible)
   const max = Math.max(0, count - visible)
   const scrolled = clampNumber(index - align, 0, max)
   const target = scrolled + direction * step
