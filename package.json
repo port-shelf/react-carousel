@@ -1,0 +1,38 @@
+{
+  "name": "react-carousel-port",
+  "version": "0.1.0",
+  "description": "A React port of the Vue 3 Carousel component library.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+      "require": { "types": "./dist/index.d.cts", "default": "./dist/index.cjs" }
+    },
+    "./carousel.css": { "types": "./dist/carousel.css.d.ts", "default": "./dist/carousel.css" }
+  },
+  "files": ["dist"],
+  "sideEffects": ["**/*.css"],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --mode library && tsc -p tsconfig.json --emitDeclarationOnly --outDir dist && cp dist/index.d.ts dist/index.d.cts && cp src/carousel.css.d.ts dist/carousel.css.d.ts",
+    "build:demo": "vite build --mode demo",
+    "test": "playwright test",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.0"
+  }
+}

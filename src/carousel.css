@@ -1,0 +1,189 @@
+.carousel {
+  position: relative;
+  min-width: 0;
+  color: var(--vc-clr-primary, #17202a);
+}
+
+.carousel__viewport {
+  position: relative;
+  overflow: hidden;
+  overflow: clip;
+}
+
+.carousel__track,
+.carousel__pagination {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.carousel__track {
+  display: flex;
+  gap: var(--vc-gap);
+  box-sizing: border-box;
+  padding-inline: var(--vc-edge);
+  transform: var(--vc-transform);
+  transition: transform var(--vc-duration) var(--vc-easing);
+}
+
+.carousel__slide {
+  box-sizing: border-box;
+  flex: 0 0 var(--vc-size);
+  min-width: 0;
+  min-height: 0;
+  scroll-snap-align: var(--vc-align);
+}
+
+.carousel.is-vertical .carousel__track {
+  flex-direction: column;
+  height: 100%;
+  padding-inline: 0;
+  padding-block: var(--vc-edge);
+}
+
+.carousel.is-bottom-to-top .carousel__track {
+  flex-direction: column-reverse;
+}
+
+.carousel.is-adaptive .carousel__track {
+  align-items: flex-start;
+}
+
+.carousel.is-adaptive .carousel__viewport {
+  transition: height var(--vc-duration) var(--vc-easing);
+}
+
+.carousel.is-native .carousel__track {
+  padding-inline: var(--vc-edge);
+  transform: none;
+}
+
+.carousel.is-native:not(.is-vertical) .carousel__viewport {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--vc-edge);
+}
+
+.carousel.is-native.is-vertical .carousel__viewport {
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y mandatory;
+  scroll-padding-block: var(--vc-edge);
+}
+
+.carousel.is-native .carousel__viewport {
+  scrollbar-width: none;
+}
+
+.carousel.is-native .carousel__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel.is-native.is-dragging .carousel__viewport {
+  scroll-snap-type: none;
+}
+
+.carousel.is-draggable .carousel__viewport {
+  cursor: grab;
+}
+
+.carousel.is-dragging .carousel__viewport {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.carousel.is-fade .carousel__track {
+  gap: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.carousel.is-fade .carousel__slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--vc-duration) var(--vc-easing);
+}
+
+.carousel.is-fade .carousel__slide--active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.carousel__prev,
+.carousel__next,
+.carousel__pagination-button,
+.carousel__rotation {
+  color: var(--vc-nav-color, currentColor);
+  font: inherit;
+  border: 0;
+  background: var(--vc-nav-background, transparent);
+  cursor: pointer;
+}
+
+.carousel__prev,
+.carousel__next,
+.carousel__rotation {
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.carousel__prev[aria-disabled="true"],
+.carousel__next[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.carousel__pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.carousel__pagination-button {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  inline-size: 24px;
+  block-size: 24px;
+  padding: 0;
+}
+
+.carousel__pagination-button::after {
+  content: '';
+  inline-size: 8px;
+  block-size: 8px;
+  border: 1px solid currentColor;
+  border-radius: 9px;
+}
+
+.carousel__pagination-button[aria-current="true"]::after {
+  inline-size: 16px;
+  background: currentColor;
+}
+
+.carousel :focus-visible,
+.carousel:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.carousel__status {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel__track,
+  .carousel__slide,
+  .carousel__viewport {
+    transition-duration: 0ms !important;
+  }
+}

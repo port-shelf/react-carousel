@@ -1,0 +1,5 @@
+export { Carousel } from './Carousel.js'
+export type { CarouselProps, SlideChange } from './Carousel.js'
+export { Navigation, Pagination, Slide } from './parts.js'
+export type { CarouselControls, NavigationProps, PaginationProps, SlideProps, SlideState } from './parts.js'
+export type { BreakpointMode, Breakpoints, CarouselLabels, CarouselOptions, Direction, DragOptions, SnapAlign, WheelOptions } from './model.js'
